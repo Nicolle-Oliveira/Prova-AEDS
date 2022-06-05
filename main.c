@@ -67,17 +67,18 @@ int main(int argc, char** argv) {
 
 	int a = 0;
 	int b = 0;
-	int result = 0;
+	int ehPilha = 0, ehFila, result;
 
 	do {
 
 		tmp = fila_retira_l(minha_fila);
 
 		if (tmp_fila[a] == tmp) {
-			result += QUEUE;
+			ehFila= QUEUE;
 		}
 		else {
-			result += FALHA;
+			ehFila = FALHA;
+			a = (j - 1);
 		}
 		a++;
 	} while (a != j);
@@ -87,24 +88,25 @@ int main(int argc, char** argv) {
 		tmp = pilha_lst_pop(minha_pilha);
 
 		if (tmp_pilha[b] == tmp) {
-			result += STACK;
+			ehPilha = STACK;
 		}
 		else {
-			result += FALHA;
+			ehPilha = FALHA;
+			b = (j - 1);
 		}
 		b++;
 	} while (b != j);
 
-	if (result == QUEUE) {
+	if (ehFila == QUEUE) {
 		printf("\n\nqueue\n\n");
 	}
-	else if(result == STACK) {
+	else if (ehPilha == STACK) {
 		printf("\n\nstack\n\n");
 	}
-	else if(result == IMPOSSIBLE){
+	else {
 		printf("\n\nimpossible\n\n");
 	}
-
+	
 	fila_libera_l(minha_fila);
 	pilha_lst_libera(minha_pilha);
 
