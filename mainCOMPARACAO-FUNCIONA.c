@@ -3,11 +3,12 @@
 #include <stdlib.h>
 
 #include "filaMEU.h"
-#include "pilha.h"
+#include "pilhas.h"
 
 #define STACK 3
 #define QUEUE 4
 #define PRIORITY_QUEUE 5
+#define NOT_SURE 7
 #define IMPOSSIBLE 0
 
 #define FALHA 1
@@ -15,26 +16,28 @@
 
 int main(int argc, char** argv) {
 
-	int num_op, op, tmp;
-	int j = 0;
+	int num_op, *op, tmp;
+	int j = 0, i;
+	int lixu;
 	int* tmp_pilha, * tmp_fila;
 	Pilha_lst* minha_pilha = pilha_lst_cria();
 	Fila_l* minha_fila = fila_cria_l();
 
-	printf("\nDigite quantas operacoes fara\n> ");
+	printf("\nDigite quantas operacoes fra\n> ");
 	scanf("%d", &num_op);
 
 	printf("(0) Sair\n(1) inserir\n(2) remover\n\n");
 
 	tmp_fila = (int*)malloc(num_op * sizeof(int));
 	tmp_pilha = (int*)malloc(num_op * sizeof(int));
+	op = (int*)malloc(num_op * sizeof(int));
 
 
-	for (int i = 0; i < num_op; i++) {
+	for (i = 0; i < num_op; i++) {
 
-		scanf("%d %d", &op, &tmp);
+		scanf("%d %d", &op[i], &tmp);
 
-		switch (op)
+		switch (op[i])
 		{
 		case 1:
 			fila_insere_l(minha_fila, tmp);
@@ -51,6 +54,15 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	for (i = (num_op - 1); i >= SUCESSO; i--) {
+		if (op[i] == FALHA) {
+			lixu = fila_retira_l(minha_fila);
+			lixu = pilha_lst_pop(minha_pilha);
+		}
+		else {
+			i = SUCESSO;
+		}
+	}
 	printf("\n\n");
 	fila_imprime_l(minha_fila);
 	printf("\n");
@@ -67,41 +79,70 @@ int main(int argc, char** argv) {
 
 	int a = 0;
 	int b = 0;
-	int result = 0;
+	int c = 0;
+	int ehPilha = 0, ehFila, ehpriority, result;
 
 	do {
 
 		tmp = fila_retira_l(minha_fila);
 
 		if (tmp_fila[a] == tmp) {
-			result += QUEUE;
+			ehFila= QUEUE;
+			a++;
 		}
 		else {
-			result += FALHA;
+			ehFila = IMPOSSIBLE;
+			a = j;
 		}
-		a++;
+
 	} while (a != j);
+	printf("\n\nehFila = %d\n\n", ehFila);
 
 	do {
 
 		tmp = pilha_lst_pop(minha_pilha);
 
 		if (tmp_pilha[b] == tmp) {
-			result += STACK;
+			ehPilha = STACK;
+			b++;
 		}
 		else {
-			result += FALHA;
+			ehPilha = IMPOSSIBLE;
+			b = j;
 		}
-		b++;
 	} while (b != j);
+	printf("\n\nehPilha = %d\n\n", ehPilha);
 
-	if (result == QUEUE) {
+	do {
+
+		if (tmp_pilha[c] >= tmp_pilha[c + 1]) {
+			ehpriority = PRIORITY_QUEUE;
+			c++;
+		}
+		else {
+			ehpriority = IMPOSSIBLE;
+			c = (j - 1);
+		}
+
+	} while (c != (j - 1));
+	printf("\n\nehpriority = %d\n\n", ehpriority);
+
+	result = ehPilha + ehFila + ehpriority;
+	printf("\n\nresult = %d\n\n", result);
+
+	if (result >= NOT_SURE) {
+		printf("\n\nnot sure\n\n");
+	}
+	else if (ehFila == QUEUE) {
 		printf("\n\nqueue\n\n");
 	}
-	else if(result == STACK) {
+	else if (ehPilha == STACK) {
 		printf("\n\nstack\n\n");
 	}
-	else if(result == IMPOSSIBLE){
+	else if (ehpriority == PRIORITY_QUEUE) {
+		printf("\n\npriority queue\n\n");
+	} 
+	else {
 		printf("\n\nimpossible\n\n");
 	}
 
